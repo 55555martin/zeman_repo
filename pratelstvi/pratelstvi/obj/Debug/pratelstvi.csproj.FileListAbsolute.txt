@@ -5,3 +5,10 @@ O:\7.M\Github\InitRepo\zeman_repo\zeman_repo\pratelstvi\pratelstvi\obj\Debug\pra
 O:\7.M\Github\InitRepo\zeman_repo\zeman_repo\pratelstvi\pratelstvi\obj\Debug\pratelstvi.csproj.CoreCompileInputs.cache
 O:\7.M\Github\InitRepo\zeman_repo\zeman_repo\pratelstvi\pratelstvi\obj\Debug\pratelstvi.exe
 O:\7.M\Github\InitRepo\zeman_repo\zeman_repo\pratelstvi\pratelstvi\obj\Debug\pratelstvi.pdb
+C:\Users\marti\Documents\programování\Github_repo\zeman_repo\pratelstvi\pratelstvi\bin\Debug\pratelstvi.exe.config
+C:\Users\marti\Documents\programování\Github_repo\zeman_repo\pratelstvi\pratelstvi\bin\Debug\pratelstvi.exe
+C:\Users\marti\Documents\programování\Github_repo\zeman_repo\pratelstvi\pratelstvi\bin\Debug\pratelstvi.pdb
+C:\Users\marti\Documents\programování\Github_repo\zeman_repo\pratelstvi\pratelstvi\obj\Debug\pratelstvi.csproj.AssemblyReference.cache
+C:\Users\marti\Documents\programování\Github_repo\zeman_repo\pratelstvi\pratelstvi\obj\Debug\pratelstvi.csproj.CoreCompileInputs.cache
+C:\Users\marti\Documents\programování\Github_repo\zeman_repo\pratelstvi\pratelstvi\obj\Debug\pratelstvi.exe
+C:\Users\marti\Documents\programování\Github_repo\zeman_repo\pratelstvi\pratelstvi\obj\Debug\pratelstvi.pdb
