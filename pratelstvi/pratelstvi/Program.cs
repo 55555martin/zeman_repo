@@ -29,13 +29,13 @@ namespace pratelstvi
             string[] startcil = Console.ReadLine().Split(' ');
             int start = Int32.Parse(startcil[0]);
             int cil = Int32.Parse(startcil[1]);
-            List<int> projite = new List<int>();
+            Dictionary<int,bool> projite = new Dictionary<int, bool>();
             List<int[]> cesty = new List<int[]>();
             int pocetcest = 0;
-            projite.Add(start);
+            projite.Add(start,true);
             foreach (int x in kamaradi[start])
             {
-                projite.Add(x);
+                projite.Add(x, true);
                 int[] cesta = new int[2];
                 cesta[0] = start;
                 cesta[1] = x;
@@ -51,9 +51,9 @@ namespace pratelstvi
                 int prvek = cesta.Last();
                 foreach (int x in kamaradi[prvek])
                 {
-                    if (!projite.Contains(x))
+                    if (!projite.ContainsKey(x))
                     {
-                        projite.Add(x);
+                        projite.Add(x, true);
                         int[] novaCesta = new int[delka+1];
                         for (int y = 0; y < delka; y++)
                         {
