@@ -64,9 +64,10 @@ namespace Union_find
 
         }
 
-        static int[,] Kruskal(List<int[]> hrany, int n)
+        static int?[,] Kruskal(List<int[]> hrany, int n)
         {
             int?[,] kostra = new int?[n, n];
+            UnionFind komponenty = new UnionFind(n);
             for (int i = 0; i < n; i++)
             {
                 for (int j = 0; j < n; j++)
@@ -75,6 +76,16 @@ namespace Union_find
                 }
             }
             hrany.Sort((sa1, sa2) => sa1[2].CompareTo(sa2[2]));
+            foreach (int[] hrana in hrany)
+            {
+                if (komponenty.Find(hrana[0], hrana[1]))
+                {
+                    komponenty.Union(hrana[0], hrana[1]);
+                    kostra[hrana[0], hrana[1]] = hrana[2];
+                    //kostra[hrana[1], hrana[0]] = hrana[2]; => toto pouze pokud jsou hrany neorientované
+                }
+            }
+            return kostra;
         }
     }
 }
