@@ -19,8 +19,9 @@ namespace Vyhledavaci_stromy
             strom.koren = node2;
             node2.left = node1;
             node2.right = node3;
-            //Console.WriteLine(strom.Show());
-            Console.WriteLine(strom.Find(1));
+            Console.WriteLine(strom.Show());
+            Console.WriteLine(strom.Find(1).value);
+            Console.ReadLine();
         }
     }
     class Node<T>
@@ -39,6 +40,31 @@ namespace Vyhledavaci_stromy
     {
         public Node<T> koren { get; set; }
 
+        public void Insert(int key, T value)
+        {
+            Node<T> node = koren;
+            Node<T> parent = null;
+            while (node != null)
+            {
+                if (key < node.key)
+                {
+                    parent = node;
+                    node = node.left;
+                }
+                else
+                {
+                    parent = node;
+                    node = node.right;
+                }
+            }
+            if (parent == null)
+                koren = new Node<T>(key, value);
+            else if (key < parent.key)
+                parent.left = new Node<T>(key, value);
+            else
+                parent.right = new Node<T>(key, value);
+        }
+
         public string Show()
         {
             string vysledek = "";
@@ -51,7 +77,7 @@ namespace Vyhledavaci_stromy
                 else
                 {
                     show_(node.left);
-                    vysledek += node.value.ToString() + " ";
+                    vysledek += node.key.ToString() + " ";
                     show_(node.right);
                 }
             }
@@ -59,7 +85,7 @@ namespace Vyhledavaci_stromy
             return vysledek;
         }
 
-        public T Find(int key)
+        public Node<T> Find(int key)
         {
             Node<T> find_(Node<T> node, int key_)
             {
@@ -73,9 +99,68 @@ namespace Vyhledavaci_stromy
                     return find_(node.right, key_);
             }
             Node<T> vysledek = find_(koren, key);
-            if (vysledek == null)
-                return default(T);
-            return vysledek.value;
+            return vysledek;
+        }
+
+        public int? FindMin()
+        {
+            Node<T> node = koren;
+            while (node != null)
+            {
+                if (node.left == null)
+                    return node.key;
+                else
+                    node = node.left;
+            }
+            return null;
+        }
+
+        public void Remove(int key)
+        {
+            Node<T> remove_(Node<T> root)
+            {
+                if (root == null)
+                    return null;
+                Node<T> newRoot = null;
+                if (key < root.key)
+                    newRoot = remove_(root.left);
+                if (key > root.key)
+                    newRoot = remove_(root.right);
+                if (key == root.key)
+                {
+                    if (root.left == null && root.right == null)
+                        newRoot = null;
+                    else if (root.left == null)
+                        newRoot = root.right;
+                    else if (root.right == null)
+                        newRoot = root.left; // zde pokračovat
+                }
+            }
+            koren = remove_(koren);
+        }
+    }
+    class Student
+    {
+        public int Id { get; }
+        public string FirstName { get; }
+        public string LastName { get; }
+        public int Age { get; }
+
+        public string ClassName { get; }
+
+        public Student(int id, string firstName, string lastName, int age, string ClassName)
+        {
+            Id = id;
+            FirstName = firstName;
+            LastName = lastName;
+            Age = age;
+        }
+
+        // aby se nám při Console.WriteLine(student) nevypsala jen nějaká adresa v paměti,
+        // upravíme výpis objektu typu student na něco čitelného
+        public override string ToString()
+        {
+            return string.Format("{0} {1} (ID: {2}) ze třídy {3}", FirstName, LastName, Id, ClassName);
         }
     }
 }
