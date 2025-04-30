@@ -13,29 +13,33 @@ namespace fix
     {
         static void Main(string[] args)
         {
-            Fix fix = new Fix();
-            string[] vstup = fix.NactiVstup();
-            float? vysledek = null;
-            if (vstup.Length > 0)
-            {
-                try
-                {
-                    // testuju jestli je první prvek číslo -> Jedná se o prefix či postfix
-                    float test = float.Parse(vstup[0], CultureInfo.InvariantCulture.NumberFormat);
-                    // POSTFIX
-                    vysledek = fix.Postfix(vstup);
-                }
-                catch
-                {
-                    // PREFIX
-                    vysledek = fix.Prefix(vstup);
-                }
-            }
-            if (vysledek != null)
-            {
-                Console.WriteLine($"{fix.ToInfix(vstup)} = {vysledek}");
-            }
-            Console.ReadLine();
+            //Fix fix = new Fix();
+            //string[] vstup = fix.NactiVstup();
+            //float? vysledek = null;
+            //if (vstup.Length > 0)
+            //{
+            //    try
+            //    {
+            //        // testuju jestli je první prvek číslo -> Jedná se o prefix či postfix
+            //        float test = float.Parse(vstup[0], CultureInfo.InvariantCulture.NumberFormat);
+            //        // POSTFIX
+            //        vysledek = fix.Postfix(vstup);
+            //    }
+            //    catch
+            //    {
+            //        // PREFIX
+            //        vysledek = fix.Prefix(vstup);
+            //    }
+            //}
+            //if (vysledek != null)
+            //{
+            //    Console.WriteLine($"{fix.ToInfix(vstup)} = {vysledek}");
+            //}
+            //Console.ReadLine();
+            FixTree strom = new FixTree(Console.ReadLine());
+            Console.WriteLine(strom.Vypis(TypFixu.Postfix));
+            Console.WriteLine(strom.Vypis(TypFixu.Prefix));
+            Console.WriteLine(strom.Vypis(TypFixu.Infix));
         }
     }
     class Fix
@@ -253,6 +257,111 @@ namespace fix
                     return chyba;
                 }
             }
+        }
+    }
+
+    class Node
+    {
+        public Node left { get; set; }
+        public Node right { get; set; }
+        public Node parent { get; set; }
+        public string valueOper { get; set; }
+        public float valueCislo { get; set; }
+        public bool isCislo { get; set; }
+        public Node(string value) // konstruktor
+        {
+            try // Číslo
+            {
+                valueCislo = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                isCislo = true;
+            }
+            catch // Operátor
+            {
+                valueOper = value;
+                isCislo = false;
+            }
+        }
+    }
+    public enum TypFixu
+    {
+        Postfix,
+        Prefix,
+        Infix
+    }
+
+    class FixTree
+    {
+        Node root {  get; }
+        public FixTree(string postfix)
+        {
+            Stack<Node> stack = new Stack<Node>();
+            string[] list = postfix.Split(' ');
+            try
+            {
+                for (int i = 0; i < list.Length; i++)
+                {
+                    Node node = new Node(list[i]);
+                    if (node.isCislo)
+                    {
+                        stack.Push(node);
+                    }
+                    else
+                    {
+                        Node b = stack.Pop();
+                        Node a = stack.Pop();
+                        node.left = a;
+                        node.right = b;
+                        a.parent = node;
+                        b.parent = node;
+                        stack.Push(node);
+                    }
+                }
+                if (stack.Count == 1)
+                {
+                    root = stack.Pop();
+                }
+                else
+                {
+                    root = null; // Je tam toho asi moc - vadný vstup
+                }
+            }
+            catch
+            {
+                root = null; // Nějak je vstup vadný
+            }
+            
+        }
+        public string Vypis(TypFixu typFixu)
+        {
+            if (root == null)
+            {
+                return null;
+            }
+            string Projdi(Node node)
+            { 
+                if (node.isCislo)
+                {
+                    return node.valueCislo.ToString();
+                }
+                else
+                {
+                    string a = Projdi(node.left);
+                    string b = Projdi(node.right);
+                    if (typFixu is TypFixu.Postfix)
+                    {
+                        return $"{a} {b} {node.valueOper}";
+                    }
+                    else if (typFixu is TypFixu.Prefix)
+                    {
+                        return $"{node.valueOper} {a} {b}";
+                    }
+                    else // Infix
+                    {
+                        return $"({a} {node.valueOper} {b})";
+                    }
+                }
+            }
+            return Projdi(root);
         }
     }
 }
