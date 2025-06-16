@@ -40,6 +40,7 @@ namespace fix
             Console.WriteLine(strom.Vypis(TypFixu.Postfix));
             Console.WriteLine(strom.Vypis(TypFixu.Prefix));
             Console.WriteLine(strom.Vypis(TypFixu.Infix));
+            Console.ReadLine();
         }
     }
     class Fix
