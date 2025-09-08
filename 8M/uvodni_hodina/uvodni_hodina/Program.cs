@@ -15,13 +15,14 @@ namespace uvodni_hodina
             Film film2 = new Film("Taky dobrej film", "Pepa", "Omáčka", 2007);
             Film film3 = new Film("Filmíček", "Jan", "Novák", 2031);
             List<Film> filmy = new List<Film>() {film1, film2, film3};
+            Random random = new Random();
             for (int i = 0; i < filmy.Count; i++)
             {
                 Film film = filmy[i];
                 for (int j = 0; j < 15; j++)
                 {
-                    Random random = new Random();
-                    double cislo = random.NextDouble() * 5;
+                    double cislo = random.NextDouble()*5;
+                    Console.WriteLine(cislo);
                     film.PridatHodnoceni(cislo);
                 }
             }
@@ -47,6 +48,14 @@ namespace uvodni_hodina
                     Console.WriteLine($"{film.Nazev} je odpad! Má hodnocení jen {film.Hodnoceni}.");
                 }
             }
+            Console.WriteLine("Film s nejlepším průměrným hodnocením: " + nejHodnoceni.ToString());
+            Console.WriteLine("Film s nejdelším názvem: " + nejdNazev.ToString());
+            Console.WriteLine("Výpis filmů:");
+            foreach (Film film in filmy)
+            {
+                Console.WriteLine(film.ToString());
+            }
+            Console.ReadLine();
         }
     }
 
