@@ -22,7 +22,6 @@ namespace uvodni_hodina
                 for (int j = 0; j < 15; j++)
                 {
                     double cislo = random.NextDouble()*5;
-                    Console.WriteLine(cislo);
                     film.PridatHodnoceni(cislo);
                 }
             }
