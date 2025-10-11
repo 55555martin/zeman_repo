@@ -11,6 +11,19 @@ namespace manzelstvi
     {
         static void Main(string[] args)
         {
+            Graf graf = new Graf();
+            while(true)
+            {
+                bool vystup = graf.Propose();
+                if (vystup)
+                    break;
+                graf.Reject();
+            }
+            for (int i = 0; i < graf.n; i++)
+            {
+                Console.WriteLine(graf.zadane[i]+1);
+            }
+            Console.ReadLine();
         }
     }
     public class Partita
@@ -24,10 +37,11 @@ namespace manzelstvi
     public class Graf
     {
         Partita[] partity {  get; }
-        int n {  get; }
-        int?[] zadane { get; set; } // mají tam buď null, nebo index z druhé partity (řešíme zadání jen ve směru z první do druhé)
+        public int n {  get; }
+        public int?[] zadane { get; set; } // mají tam buď null, nebo index z druhé partity (řešíme zadání jen ve směru z první do druhé)
         Dictionary<int, bool>[] pozadani { get; set; } // list pro každého muže (objekty z druhé partity), kdo je požádal, dict pro rychlejší vyhledávání (hash je efektivnější než list)
-        Graf() // Načte graf ze vstupu
+        
+        public Graf() // Načte graf ze vstupu
         {
             this.n = Int32.Parse(Console.ReadLine());
             this.partity = new Partita[2];
@@ -62,7 +76,8 @@ namespace manzelstvi
                 this.pozadani[i] = new Dictionary<int, bool>();
             }
         }
-        bool Propose()
+
+        public bool Propose() // Všechny ženy, které jsou odmítnuté, tak požádají svoji nejlepší preferenci
         {
             int count = 0;
             for (int i = 0; i < n; i++)
@@ -76,16 +91,33 @@ namespace manzelstvi
                 else
                     count++;
             }
-            if (count == 0)
+            if (count == n) // Vrací true, pokavaď už jsou hotové preference a již není co měnit
                 return true;
             else
                 return false;
         }
-        void Reject()
-        {
-            for (int i = 0; i<n; i++)
-            {
 
+        public void Reject() // Muži odmítnou ženy, které nechtějí
+        {
+            for (int i = 0; i < n; i++)
+            {
+                Queue<int> fronta = this.partity[1].preference[i];
+                bool vybrano = false;
+                for (int j = 0; j < n; j++) // Projde svoje preference od shora dolů, a jakmile potká nějakou, která ho požádala tak všechny ostatní bude odmítat
+                {
+                    int vyvolena = fronta.Dequeue() - 1;
+                    fronta.Enqueue(vyvolena + 1); // Abych to tam později měl
+                    if (pozadani[i].ContainsKey(vyvolena))
+                    {
+                        if (vybrano) // Odmítnout
+                        {
+                            pozadani[i].Remove(vyvolena);
+                            zadane[vyvolena] = null;
+                        }
+                        else // Přijmout
+                            vybrano = true;
+                    }
+                }
             }
         }
     }
