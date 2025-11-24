@@ -54,7 +54,7 @@ namespace MiniMax_Nim_2
             }
             else
             {
-                throw new ArgumentException("Neplatný tah!");
+                //throw new ArgumentException("Neplatný tah!");
             }
         }
 
@@ -63,7 +63,7 @@ namespace MiniMax_Nim_2
             return pileIndex >= 0 &&
                    pileIndex < Piles.Count &&
                    Piles[pileIndex] >= matchesToRemove &&
-                   matchesToRemove > 0;
+                   matchesToRemove >= 0;
         }
     }
 
@@ -108,8 +108,8 @@ namespace MiniMax_Nim_2
 
         private Tuple<int, byte> GetBestBotMove()
         {
-            Tuple<int, int, byte> result = minimax(_state.Piles.ToList(), 10, true);
-            int score = result.Item1;
+            Tuple<double, int, byte> result = minimax(_state.Piles.ToList(), 10, true);
+            double score = result.Item1;
             int bestPile = result.Item2;
             byte matchesToRemove = result.Item3;
 
@@ -133,33 +133,55 @@ namespace MiniMax_Nim_2
                 return result;
             }
 
-            Tuple<int, int, byte> minimax(List<int> piles, int depth, bool maximizingPlayer)
+            Tuple<double, int, byte> minimax(List<int> piles, int depth, bool maximizingPlayer)
             {
                 List<Tuple<int, byte>> moves = possibleMoves(piles);
                 if(depth == 0 || moves.Count() == 0)
                 {
-                    return new Tuple<int, int, byte>(ohodnoceni(piles, maximizingPlayer), -1, 0);
+                    return new Tuple<double, int, byte>(ohodnoceni(piles, maximizingPlayer), -1, 0);
                 }
                 if(maximizingPlayer)
                 {
-                    Tuple<int, int, byte> best = new Tuple<int, int, byte>(-2, -1, 0);
+                    Tuple<double, int, byte> best = new Tuple<double, int, byte>(-2, -1, 0);
                     foreach (Tuple<int, byte> i in moves)
                     {
                         List<int> new_piles = piles;
-                        new_piles[i.Item1]
-                        Tuple<int, int, byte> new_minimax = minimax(piles, depth-1, false);
+                        new_piles[i.Item1] -= i.Item2 + 1;
+                        Tuple<double, int, byte> new_minimax = minimax(new_piles, depth-1, false);
+                        if (new_minimax.Item1 > best.Item1)
+                            best = new_minimax;
                     }
+                    return best;
+                }
+                else // minimizing player
+                {
+                    Tuple<double, int, byte> best = new Tuple<double, int, byte>(2, -1, 0);
+                    foreach (Tuple<int, byte> i in moves)
+                    {
+                        List<int> new_piles = piles;
+                        new_piles[i.Item1] -= i.Item2 + 1;
+                        Tuple<double, int, byte> new_minimax = minimax(new_piles, depth - 1, true);
+                        if (new_minimax.Item1 < best.Item1)
+                            best = new_minimax;
+                    }
+                    return best;
                 }
             }
 
-            int ohodnoceni(List<int> piles, bool maximizingPlayer)
+            double ohodnoceni(List<int> piles, bool maximizingPlayer)
             {
                 if (piles.Sum() == 0 && maximizingPlayer)
                     return -1;
                 else if (piles.Sum() == 0 && !maximizingPlayer)
                     return 1;
+                else if (piles.Sum() % 2 == 1 && maximizingPlayer)
+                    return 0.5;
+                else if (piles.Sum() % 2 == 1 && !maximizingPlayer)
+                    return -0.5;
+                else if (maximizingPlayer)
+                    return -0.5;
                 else
-                    return 0;
+                    return 0.5;
             }
 
 
