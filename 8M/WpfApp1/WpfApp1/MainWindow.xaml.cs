@@ -30,6 +30,9 @@ namespace WpfApp1
             byte g = Convert.ToByte(txtGreen.Text);
             byte b = Convert.ToByte(txtBlue.Text);
             colorRect.Fill = new SolidColorBrush(Color.FromRgb(red, g, b));
+            sliderRed.Value = red;
+            txtRed.Text = Convert.ToString(red);
+            RgbToHex();
         }
 
         public void ChangeGreen(byte green)
@@ -39,6 +42,9 @@ namespace WpfApp1
             byte r = Convert.ToByte(txtRed.Text);
             byte b = Convert.ToByte(txtBlue.Text);
             colorRect.Fill = new SolidColorBrush(Color.FromRgb(r, green, b));
+            sliderGreen.Value = green;
+            txtGreen.Text = Convert.ToString(green);
+            RgbToHex();
         }
 
         public void ChangeBlue(byte blue)
@@ -48,6 +54,9 @@ namespace WpfApp1
             byte r = Convert.ToByte(txtRed.Text);
             byte g = Convert.ToByte(txtGreen.Text);
             colorRect.Fill = new SolidColorBrush(Color.FromRgb(r, g, blue));
+            sliderBlue.Value = blue;
+            txtBlue.Text = Convert.ToString(blue);
+            RgbToHex();
         }
 
         private void txtRed_TextChanged(object sender, TextChangedEventArgs e)
@@ -102,6 +111,32 @@ namespace WpfApp1
             }
             byte blue = Convert.ToByte(result);
             ChangeBlue(blue);
+        }
+
+        private void sliderRed_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            byte red = Convert.ToByte(sliderRed.Value);
+            ChangeRed(red);
+        }
+
+        private void sliderGreen_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            byte green = Convert.ToByte(sliderGreen.Value);
+            ChangeGreen(green);
+        }
+
+        private void sliderBlue_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            byte blue = Convert.ToByte(sliderBlue.Value);
+            ChangeBlue(blue);
+        }
+
+        public void RgbToHex()
+        {
+            int r = Convert.ToInt32(sliderRed.Value);
+            int g = Convert.ToInt32(sliderGreen.Value);
+            int b = Convert.ToInt32(sliderBlue.Value);
+            HexCode.Content = $"#{r:X2}{g:X2}{b:X2}";
         }
     }
 }
